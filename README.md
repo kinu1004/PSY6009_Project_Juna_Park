@@ -3,7 +3,7 @@
 This repository is created to share the data source and analysis I ran for
 my psychology master degree project at University of Sheffield.
 
-My project is secondary research utilizing two datasets, one from Alsuhibani et al. (2021) and another from McBride et al. (2020).
+My project is secondary research utilizing two datasets, one from Alsuhibani et al. (2021) and another from McBride et al. (2020). These studies can be found in the folder named 'References/Dataset sources' in the repository.
 
 Accessing Data,
 The original datasets are in .sav. (you can find them in 'Origianl' folder inside 'Dataset' folder in this repository.
