@@ -2,6 +2,7 @@
 
 # Set libraries
 library(tidyverse)
+library(psych)
 library(readxl)
 library(ggplot2)
 library(dplyr)
@@ -11,6 +12,32 @@ library(car)
 # Dataset: Alsuhibani et al., 2021_Extracted_Data_Project(Juna Park).xlsb
 file_path1 <- "C:/Users/kinu1/Documents/PSY6009_Project_Juna_Park/dataset/Alsuhibani et al., 2021_Extracted_Data_Project(Juna Park).xlsx"
 data1 <- read_excel(file_path1)
+
+# Check alpha coefficients of items
+# religiosity
+religiosity_items1 <- data1[, grep("^REL", colnames(data1))]
+alpha_religiosity1 <- alpha(religiosity_items1)
+print(alpha_religiosity1)
+
+# atheism
+atheism_items1 <- data1[, grep("^ATH", colnames(data1))]
+alpha_atheism1 <- alpha(atheism_items1)
+print(alpha_atheism1)
+
+# cognitive reflection
+crt_items1 <- data1[, grep("^CRT", colnames(data1))]
+alpha_crt1 <- alpha(crt_items1)
+print(alpha_crt1)
+
+# depression
+dep_items1 <- data1[, grep("^DEPPHQ", colnames(data1))]
+alpha_dep1 <- alpha(dep_items1)
+print(alpha_dep1)
+
+# death anxiety
+da_items1 <- data1[, grep("^DTHANX", colnames(data1))]
+alpha_da1 <- alpha(da_items1)
+print(alpha_da1)
 
 # Before analysis, run median split on the participants based on their religiosity scores
 data_split <- data1 %>%
@@ -175,6 +202,39 @@ print(tukey_test1_hyp2)
 t_test1_hyp2 <- t.test(CRTtot ~ SEX, data = data_split)
 print(t_test1_hyp2)
 
+# Calculate mean, standard deviation, and 95% CI for CRT by belief type only
+summary_table_crt1_1 <- data_split %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(CRTtot),
+            sd_value = sd(CRTtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_crt1_1)
+
+# Calculate mean, standard deviation, and 95% CI for CRT by Sex only
+summary_table_crt1_2 <- data_split %>%
+  group_by(SEX) %>%
+  summarize(mean_value = mean(CRTtot),
+            sd_value = sd(CRTtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_crt1_2)
+
+# Calculate mean, standard deviation, and 95% CI for CRT by sex and belief
+summary_table_crt1_3 <- data_split %>%
+  group_by(SEX, Rel_Athe_Group) %>%
+  summarize(mean_value = mean(CRTtot),
+            sd_value = sd(CRTtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_crt1_3)
+
 
 # Interaction between sex and Rel_Athe_Group
 
@@ -219,6 +279,18 @@ print(tukey_test1_hyp3)
 # Post hoc test for Sex (SEX)
 t_test1_hyp3 <- t.test(DAtot ~ SEX, data = data_split)
 print(t_test1_hyp3)
+
+
+# Calculate mean, standard deviation, and 95% CI for Death Anxiety by belief type only
+summary_table_da1 <- data_split %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(DAtot),
+            sd_value = sd(DAtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_da1)
 
 
 # Interaction between Sex and Rel_Athe_Group
@@ -285,6 +357,17 @@ r_squared_3 <- model_summary_3$r.squared
 # Print the R-squared value
 print(paste("R-squared (Multiple R-squared):", round(r_squared_3, 4)))
 
+
+# Calculate mean, standard deviation, and 95% CI for Depression by belief type only
+summary_table_dep1 <- data_split %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(PHQ9tot),
+            sd_value = sd(PHQ9tot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_dep1)
 
 
 #ANCOVA with age

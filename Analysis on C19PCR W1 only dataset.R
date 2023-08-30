@@ -2,6 +2,7 @@
 
 # Set libraries
 library(tidyverse)
+library(psych)
 library(readxl)
 library(ggplot2)
 library(dplyr)
@@ -11,6 +12,37 @@ library(car)
 # Dataset: McBride et al. (2020), C19PRC_Extracted_Data_Project(Juna Park)_W1only.xlsb
 file_path2 <- "C:/Users/kinu1/Documents/PSY6009_Project_Juna_Park/Dataset/C19PRC_Extracted_Data_Project_W1only.xlsx"
 data2 <- read_excel(file_path2)
+
+# Check alpha coefficients of items
+# religiosity
+religiosity_items2 <- data2[, grep("^REL", colnames(data2))]
+alpha_religiosity2 <- alpha(religiosity_items2)
+print(alpha_religiosity2)
+
+# atheism
+atheism_items2 <- data2[, grep("^ATH", colnames(data2))]
+alpha_atheism2 <- alpha(atheism_items2)
+print(alpha_atheism2)
+
+# cognitive reflection
+crt_items2 <- data2[, grep("^CRT", colnames(data2))]
+alpha_crt2 <- alpha(crt_items2)
+print(alpha_crt2)
+
+# anxiety
+anx_items2 <- data2[, grep("^GAD", colnames(data2))]
+alpha_anx2 <- alpha(anx_items2)
+print(alpha_anx2)
+
+# depression
+dep_items2 <- data2[, grep("^PHQ", colnames(data2))]
+alpha_dep2 <- alpha(dep_items2)
+print(alpha_dep2)
+
+# death anxiety
+da_items2 <- data2[, grep("^DA", colnames(data2))]
+alpha_da2 <- alpha(da_items2)
+print(alpha_da2)
 
 # Before analysis, run median split on the participants based on their religiosity scores
 data_split2 <- data2 %>%
@@ -172,6 +204,16 @@ r_squared2 <- model_summary2$r.squared
 # Print the R-squared value
 print(paste("R-squared (Multiple R-squared):", round(r_squared2, 4)))
 
+# Calculate mean, standard deviation, and 95% CI for CRT by belief type only
+summary_table_crt2 <- data_split2 %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(CRTtot),
+            sd_value = sd(CRTtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_crt2)
 
 
 # Hypothesis 3: Agnostics will score higher than the other groups on death anxiety.
@@ -209,6 +251,18 @@ r_squared2_2 <- model_summary2_2$r.squared
 
 # Print the R-squared value
 print(paste("R-squared (Multiple R-squared):", round(r_squared2_2, 4)))
+
+
+# Calculate mean, standard deviation, and 95% CI for death anxiety by belief type only
+summary_table_da2 <- data_split2 %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(DAtot),
+            sd_value = sd(DAtot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_da2)
 
 
 #ANCOVA with age
@@ -256,6 +310,17 @@ r_squared2_3 <- model_summary2_3$r.squared
 print(paste("R-squared (Multiple R-squared):", round(r_squared2_3, 4)))
 
 
+# Calculate mean, standard deviation, and 95% CI for depression by belief type only
+summary_table_dep2 <- data_split2 %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(PHQ9tot),
+            sd_value = sd(PHQ9tot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_dep2)
+
 
 #ANCOVA with age
 hyp4_ANCOVA2 <- lm(PHQ9tot ~ Rel_Athe_Group + Age, data = data_split2)
@@ -298,6 +363,18 @@ r_squared2_4 <- model_summary2_4$r.squared
 
 # Print the R-squared value
 print(paste("R-squared (Multiple R-squared):", round(r_squared2_4, 4)))
+
+
+# Calculate mean, standard deviation, and 95% CI for anxiety by belief type only
+summary_table_anx2 <- data_split2 %>%
+  group_by(Rel_Athe_Group) %>%
+  summarize(mean_value = mean(GAD7tot),
+            sd_value = sd(GAD7tot),
+            lower_ci = mean_value - qt(0.975, df = n() - 1) * (sd_value / sqrt(n())),
+            upper_ci = mean_value + qt(0.975, df = n() - 1) * (sd_value / sqrt(n())))
+
+# Print the summarized table
+print(summary_table_anx2)
 
 
 
